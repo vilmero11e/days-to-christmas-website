@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Christmas Countdown by vilmerolle</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding-bottom: 50px;
+            background-color: #0a4f2e;
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+        #content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            width: 100%;
+        }
+        #credit {
+            position: absolute;
+            top: 20px;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #ff0000;
+            text-shadow: 2px 2px 4px rgba(255,255,255,0.5);
+        }
+        #countdown {
+            font-size: 3em;
+            text-align: center;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+        #christmas-tree {
+            width: 200px;
+            height: 200px;
+            margin-bottom: 20px;
+        }
+        .snowflake {
+            color: #fff;
+            font-size: 1em;
+            font-family: Arial, sans-serif;
+            text-shadow: 0 0 5px #000;
+            position: fixed;
+            top: -10%;
+            z-index: 9999;
+            user-select: none;
+            cursor: default;
+            animation-name: snowflakes-fall, snowflakes-shake;
+            animation-duration: 10s, 3s;
+            animation-timing-function: linear, ease-in-out;
+            animation-iteration-count: infinite, infinite;
+            animation-play-state: running, running;
+        }
+        @keyframes snowflakes-fall {
+            0% {top: -10%;}
+            100% {top: 100%;}
+        }
+        @keyframes snowflakes-shake {
+            0%, 100% {transform: translateX(0);}
+            50% {transform: translateX(80px);}
+        }
+        #playButton {
+            background-color: #c41e3a; /* Christmas red */
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1em;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        #playButton:hover {
+            background-color: #a71930;
+        }
+        #secretButton {
+            background-color: #0d6b3e;
+            color: #a5d6b7;
+            border: 1px solid #a5d6b7;
+            padding: 5px 10px;
+            font-size: 0.8em;
+            cursor: pointer;
+            border-radius: 3px;
+            margin-top: 50px;
+            transition: all 0.3s ease;
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+        }
+        #secretButton:hover {
+            background-color: #a5d6b7;
+            color: #0d6b3e;
+        }
+    </style>
+</head>
+<body>
+    <div id="content">
+        <div id="credit">by vilmerolle</div>
+        <img id="christmas-tree" src="tree.png" alt="Christmas Tree">
+        <div id="countdown"></div>
+        <button id="playButton">Play Christmas Music</button>
+    </div>
+    <button id="secretButton">secret</button>
+    <audio id="backgroundMusic" loop>
+        <source src="song.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <script>
+        // Snowflake creation
+        const snowflakesCount = 50;
+        const snowflakesContainer = document.createElement('div');
+        for (let i = 0; i < snowflakesCount; i++) {
+            const snowflake = document.createElement('div');
+            snowflake.className = 'snowflake';
+            snowflake.style.left = `${Math.random() * 100}%`;
+            snowflake.style.animationDelay = `${Math.random() * 10}s, ${Math.random() * 5}s`;
+            snowflake.innerHTML = '❄';
+            snowflakesContainer.appendChild(snowflake);
+        }
+        document.body.appendChild(snowflakesContainer);
+
+        // Set the date we're counting down to
+        const christmasDate = new Date("Dec 25, " + new Date().getFullYear() + " 00:00:00").getTime();
+
+        // Update the countdown every 1 second
+        const x = setInterval(function() {
+            const now = new Date().getTime();
+            const distance = christmasDate - now;
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById("countdown").innerHTML = days + "d " + hours + "h "
+            + minutes + "m " + seconds + "s ";
+
+            if (distance < 0) {
+                clearInterval(x);
+                document.getElementById("countdown").innerHTML = "Merry Christmas!";
+            }
+        }, 1000);
+
+        // Play button functionality
+        const playButton = document.getElementById('playButton');
+        const backgroundMusic = document.getElementById('backgroundMusic');
+
+        playButton.addEventListener('click', function() {
+            if (backgroundMusic.paused) {
+                backgroundMusic.play();
+                playButton.textContent = 'Pause Christmas Music';
+            } else {
+                backgroundMusic.pause();
+                playButton.textContent = 'Play Christmas Music';
+            }
+        });
+
+        // Secret button functionality
+        const secretButton = document.getElementById('secretButton');
+        secretButton.addEventListener('click', function() {
+            window.location.href = 'game/index.html';
+        });
+    </script>
+</body>
+</html>
